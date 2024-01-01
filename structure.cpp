@@ -1,4 +1,5 @@
 ﻿#include"structure.h"
+#include <QFile>
 
 
 BlockGroup::BlockGroup()
@@ -147,7 +148,7 @@ void BlockGroup::deleteFile(int inodeindex)     //删除文件/目录
         updateInode(fatherinode);
     }
     //删除该文件/目录
-    if(inode->file_type == FileType::COMMON){   //普通文件直接清除数据块
+    if(inode->file_type == FileType::TXT){   //普通文件直接清除数据块
         for(int i = 0; i < inode->block_num; i++){
             groupdescriptor.DataBlockBitArray[inode->DataBlockVec[i]] = true;
         }
@@ -347,7 +348,7 @@ void BlockGroup::updateInode(Inode *inode)      //更新FCB数据
     //更新时间
     inode->update_time = QDateTime::currentDateTime();
     //更新文件大小
-    if(inode->file_type == FileType::COMMON){
+    if(inode->file_type == FileType::TXT){
         inode->file_size = inode->block_num * 4096;
     }
     else if(inode->file_type == FileType::DIRECTORY){

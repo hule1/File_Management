@@ -5,6 +5,7 @@
 #include "structure.h"
 #include <QInputDialog>
 #include "dialog.h"
+#include "manage.h"
 
 namespace Ui {
 class Widget;
@@ -15,9 +16,10 @@ class Widget : public QWidget
     Q_OBJECT
 
 public:
-    explicit Widget(QWidget *parent = nullptr);
+    explicit Widget(Manage& m, QWidget *parent = nullptr);
     ~Widget();
     void update();  //更新文件显示
+    Manage* mage;
 
 private slots:
     void on_Read_clicked();

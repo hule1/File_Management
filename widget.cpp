@@ -1,10 +1,12 @@
 ﻿#include "widget.h"
+#include "logindialog.h"
 #include "ui_widget.h"
 
-Widget::Widget(QWidget *parent) :
+Widget::Widget(Manage& m, QWidget* parent) :
     QWidget(parent),
     ui(new Ui::Widget)
 {
+    mage = &m;
     ui->setupUi(this);
     ui->tableWidget->setHorizontalHeaderLabels(QStringList()<<"文件类型"<<"文件名"<<"文件大小"<<"创建时间"<<"修改时间");
     blockgroup = new BlockGroup();
@@ -57,9 +59,9 @@ void Widget::on_Read_clicked()      //读文件操作
     QList<QTableWidgetItem*> item_list = ui->tableWidget->selectedItems();
     if(item_list.length() >= 2){
         QString filetype = item_list[0]->text();
-        if(filetype == "COMMON"){
+        if(filetype == "TXT"){
             QString filename = item_list[1]->text();
-            int inodeindex = blockgroup->FindInodeByName(FileType::COMMON, filename, blockgroup->current_inode_index);
+            int inodeindex = blockgroup->FindInodeByName(FileType::TXT, filename, blockgroup->current_inode_index);
             Inode *inode = blockgroup->InodeList[inodeindex];
             QString content = "";
             for(int i = 0; i < inode->block_num; i++){
@@ -121,10 +123,10 @@ void Widget::on_Creat_File_clicked()    //创建文件操作
             QMessageBox::warning(this, " ", "文件名不得包含‘\\’");
             return;
         }
-        if(blockgroup->FindInodeByName(FileType::COMMON, file_name, blockgroup->current_inode_index) != -1){
+        if(blockgroup->FindInodeByName(FileType::TXT, file_name, blockgroup->current_inode_index) != -1){
             QMessageBox::warning(this, " ", "已存在重名文件");
         }else{
-            blockgroup->createFile(FileType::COMMON, file_name);
+            blockgroup->createFile(FileType::TXT, file_name);
             update();
         }
     }
@@ -190,9 +192,9 @@ void Widget::on_Write_clicked()         //写文件操作
     QList<QTableWidgetItem*> item_list = ui->tableWidget->selectedItems();
     if(item_list.length() >= 2){
         QString filetype = item_list[0]->text();
-        if(filetype == "COMMON"){
+        if(filetype == "TXT"){
             QString filename = item_list[1]->text();
-            int inodeindex = blockgroup->FindInodeByName(FileType::COMMON, filename, blockgroup->current_inode_index);
+            int inodeindex = blockgroup->FindInodeByName(FileType::TXT, filename, blockgroup->current_inode_index);
             now_index =inodeindex;
             Inode *inode = blockgroup->InodeList[inodeindex];
             QString content = "";
@@ -225,11 +227,11 @@ void Widget::on_Rename_clicked()    //重命名操作
         QString filetype = item_list[0]->text();
         QString filename = item_list[1]->text();
         if(ok && !newfilename.isEmpty()){
-            if(filetype == "COMMON"){
-                if(blockgroup->FindInodeByName(FileType::COMMON, newfilename, blockgroup->current_inode_index) != -1){
+            if(filetype == "TXT"){
+                if(blockgroup->FindInodeByName(FileType::TXT, newfilename, blockgroup->current_inode_index) != -1){
                     QMessageBox::warning(this, " ", "已存在重名文件");
                 }else{
-                    int index = blockgroup->FindInodeByName(FileType::COMMON, filename, blockgroup->current_inode_index);
+                    int index = blockgroup->FindInodeByName(FileType::TXT, filename, blockgroup->current_inode_index);
                     blockgroup->InodeList[index]->file_name = newfilename;
                     update();
                 }
@@ -252,8 +254,8 @@ void Widget::on_Delete_clicked()    //删除操作
     if(item_list.length() >= 2){
         QString filetype = item_list[0]->text();
         QString filename = item_list[1]->text();
-        if(filetype == "COMMON"){
-            int index = blockgroup->FindInodeByName(FileType::COMMON, filename, blockgroup->current_inode_index);
+        if(filetype == "TXT"){
+            int index = blockgroup->FindInodeByName(FileType::TXT, filename, blockgroup->current_inode_index);
             blockgroup->deleteFile(index);
             update();
         }

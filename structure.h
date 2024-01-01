@@ -6,15 +6,15 @@
 #include<QMap>
 #include<QMessageBox>
 #include<QTextStream>
-#include<QTextCodec>
+#include <QTextCodec>
 #pragma execution_character_set("utf-8")
 
 enum FileType{
-    UNKNOWN, COMMON, DIRECTORY
+    UNKNOWN, TXT, DIRECTORY
 };
 
 const static char*FileType_array[]={
-    "UNKNOWN", "COMMON", "DIRECTORY"
+    "UNKNOWN", "TXT", "DIRECTORY"
 };
 
 struct SuperBlock{  //超级块

@@ -28,20 +28,31 @@ SOURCES += \
         dialog.cpp \
         main.cpp \
         structure.cpp \
-        widget.cpp
+        widget.cpp \
+        logindialog.cpp \
+        registerdialog.cpp \
+        user.cpp \
+        manage.cpp
 
 HEADERS += \
         dialog.h \
         structure.h \
-        ui_dialog.h \
-        ui_widget.h \
-        widget.h
+        widget.h \
+        logindialog.h \
+        registerdialog.h \
+        user.h \
+        manage.h \
 
 FORMS += \
         dialog.ui \
-        widget.ui
+        widget.ui \
+        logindialog.ui \
+        registerdialog.ui\
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    Resource.qrc

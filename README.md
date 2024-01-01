@@ -15,7 +15,7 @@
 - 开发框架：QT 5.12.2
 
 ## 设计过程
-一定程度上借鉴了学长的设计经验，并做出一些简化和改进
+一定程度上借鉴了以前的设计经验，并做出一些简化和改进
 ### 系统架构
 ![系统架构](https://github.com/lupus666/File_Management/raw/master/image/结构图.png)
 - 用户界面，即用户直接进行操作的图形窗口界面
@@ -33,8 +33,6 @@
     用于接受用户的输入（磁盘大小，文件/目录名）
 - 读文件/写文件窗口  
     用于给用户提供文件的读写操作  
-
-详细的介绍在[界面使用说明](#界面使用说明)
 
 ### 数据结构：块组（BlockGroup）
 为了简化模拟，这里的块组（卷）相当于一个虚拟磁盘
@@ -191,7 +189,7 @@ bool BlockGroup::createFile(FileType filetype, QString filename)    //创建文�
 文件/目录在删除时，需要分为两种不同的情况，删除文件和删除目录。  
 
 删除文件时，只需将该文件占用的FCB和数据块释放，即在FCB位图和数据块位图对应位置改为True便可。因为每次分配新的FCB和数据块都会覆盖写入，因此在删除时不必清除其中的内容。  
-  
+
 删除目录时，如果该目录下存在子文件子目录，则需要递归地删除该目录下的文件，而且要注意避免重复删除修改父目录FCB
 ```C++
 void BlockGroup::deleteFile(int inodeindex)     //删除文件/目录
@@ -303,38 +301,11 @@ bool BlockGroup::writeFileToVirtualDisk(int inodeindex, QString content)    //�
 }
 ```
 其他实现过程可以直接参考源文件，所有代码都有必要的注释。
-## 界面使用说明
-### 主窗口
-![1](https://github.com/lupus666/File_Management/raw/master/image/1.png)
-当文件系统无法找到`disk.txt`文件时，会提示用户磁盘未格式化并且这时用户只能关闭系统或者格式化磁盘。  
-主窗口左边的框架用于显示当前目录情况，其中文件大小的单位是`Byte`
-### 输入磁盘大小窗口
-![2](https://github.com/lupus666/File_Management/raw/master/image/2.png)
-输入内容限制为大于0小于100的数字，否则会报错
-### 创建文件/创建目录
-![3](https://github.com/lupus666/File_Management/raw/master/image/3.png)
-输入内容不得出现`\`字符，否则会报错
-### 更改当前目录
-![4](https://github.com/lupus666/File_Management/raw/master/image/4.png)
-![5](https://github.com/lupus666/File_Management/raw/master/image/5.png)
-进入下级目录需要选中相应的目录文件，而返回上级目录不需要选中
-### 读写文件
-![6](https://github.com/lupus666/File_Management/raw/master/image/6.png)
-读文件时，只能读不能修改
-![7](https://github.com/lupus666/File_Management/raw/master/image/7.png)
-写文件是，可以进行写入，按确定按钮便可以进行写入
-
-### 删除文件
-![8](https://github.com/lupus666/File_Management/raw/master/image/8.png)
-选中要删除的文件进行删除便可
-
-### 保存到真实磁盘
-![9](https://github.com/lupus666/File_Management/raw/master/image/9.png)
-点击保存便可直接将当前文件系统的关键信息保存到真实磁盘  
 
 ## 存在问题
 ### 读写文件时的问题
 在处理数据块内部碎片时，我使用了`' '`进行填充，也因为这个空格符，在下一次读取文件时会读取到若干个空格，写文件的时候就在这些空格后面写入，而无法接续上一次的末尾，而且会存在浪费空间的现象。  
 另外，文件无法记录写入文件时的字体和颜色，在下一次的读取文件时会自动转化为系统默认的字体和颜色。
+
 ### 文件大小的问题
 因为该文件系统最小的空间单位为数据块，因此文件大小是由文件占用数据块的数量决定的，即数据块*4KB，而无法精确到文件实际大小。
